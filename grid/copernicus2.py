@@ -5,18 +5,24 @@ import cartopy.feature as cfeature
 import numpy as np
 
 # Load your NetCDF dataset
-ds = xr.open_dataset('C:/SIH/python/data/cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_202311/2024/08/mfwamglocep_2024081500_R20240816_00H.nc', engine='netcdf4')
+ds = xr.open_dataset('C:/SIH/grid/cmems_mod_glo_wav_anfc_0.083deg_PT3H-i_1725368024903.nc', engine='netcdf4')
 
 # Define specific time for the wave height
-specific_time = '2024-08-16T00:00:00'
+specific_time = '2024-09-16T04:00:00'
 wave_height_at_time = ds['VHM0'].sel(time=specific_time, method='nearest')
+
+# Get the bounds from the dataset
+lon_min = ds['longitude'].min().item()
+lon_max = ds['longitude'].max().item()
+lat_min = ds['latitude'].min().item()
+lat_max = ds['latitude'].max().item()
 
 # Define grid resolution
 grid_res = 1.0  # Adjust this value to change the grid size
 
-# Define longitude and latitude bins
-lon_bins = np.arange(-180, 180 + grid_res, grid_res)
-lat_bins = np.arange(-90, 90 + grid_res, grid_res)
+# Define longitude and latitude bins based on the dataset's bounds
+lon_bins = np.arange(lon_min, lon_max + grid_res, grid_res)
+lat_bins = np.arange(lat_min, lat_max + grid_res, grid_res)
 lon_centers = 0.5 * (lon_bins[:-1] + lon_bins[1:])
 lat_centers = 0.5 * (lat_bins[:-1] + lat_bins[1:])
 
